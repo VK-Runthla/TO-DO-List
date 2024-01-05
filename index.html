@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A simple, clean javascript list app to keep track of your to-do items.">
+    <title>To-Do List</title>
+    <!-- Font-awesome cdn -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Bootstrap cdn -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+    <!-- Google-Font cdn -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200&display=swap" rel="stylesheet">
+
+    <!-- My Styling -->
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            font-size: 1em;
+            background: url(./assets/images/paper.jpeg) no-repeat center center fixed;
+            background-size: cover;
+            background-position: 0 -125px;
+            margin: 0;
+            padding: 40px 0 0 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        input {
+            box-sizing: border-box;
+            width: 80%;
+            margin-right: 5px;
+        }
+
+        h1 {
+            margin: 65px 0 10px 0;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .form-control:focus{
+            box-shadow: none;
+            border-color: transparent;
+        }
+
+        #add:focus{
+            box-shadow: none;
+        }
+
+        .error {
+            width: 100%;
+            background-color: #fff;
+            border-radius: 8px;
+            color: red;
+            font-weight: 600;
+            padding: 10px 0px;
+            display: none;
+        }
+
+        .task{
+            display: grid;
+            padding: 0.8em 1em;
+            grid-template-columns: 1fr 8fr 2fr 2fr;
+            gap: 1em;
+            align-items: center;
+            flex-wrap: wrap;
+            word-break: break-all;
+        }
+        #tasks h1{
+            font-size: 55px;
+        }
+        #tasks p{
+            font-size: 20px;
+        }
+        .task span{
+            font-size: 20px;
+            font-weight: 500;
+            text-align: left;
+        }
+        .task button{
+            border-radius: 10px;
+            border: none;
+            background: transparent;
+            transition: all .3s ease-in-out;
+            font-size: 16px;
+        } 
+        .delete:hover{
+            color: red;
+            transition: all .3s ease-in-out;
+        }
+        .edit:hover{
+            color: blue;
+            transition: all .3s ease-in-out;
+        }
+        .task input[type="checkbox"]{
+            display: inline-block;
+            width: 100%;
+            max-width: 50px;
+            height: 20px;
+        }
+        .task input[type="checkbox"]:checked span{
+            text-decoration: line-through;
+        }
+        .complited{
+            text-decoration: line-through;
+            color: #808080;
+        }
+
+        #add {
+            margin-right: 5px;
+        }
+
+        #add,
+        #clear {
+            border-radius: .25rem !important;
+        }
+
+        #add:hover,
+        #clear:hover {
+            background-color: #6c757d !important;
+        }
+
+        .btn-outline-secondary {
+            color: #212529;
+        }
+
+        .deletebutton {
+            border-color: white;
+            padding: 0;
+            height: 25px;
+            width: 25px;
+            visibility: hidden;
+        }
+
+        .deletebutton:hover {
+            color: #6c757d;
+        }
+
+        .edit {
+            border-color: transparent;
+            height: 40px;
+        }
+
+        .edit:focus-visible {
+            outline: transparent auto 1px;
+        }
+
+        .show {
+            visibility: visible;
+        }
+
+        .width {
+            width: 15%;
+        }
+
+        .margin {
+            margin: auto;
+        }
+
+        .done {
+            text-decoration: line-through;
+        }
+
+        .itemdiv {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.5em;
+        }
+
+        .itemdiv:hover>.deletebutton {
+            visibility: visible;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mb-3 w-25 margin">
+        <div class="container">
+            <div class="box d-flex align-items-center">
+                <label for="userinput"></label>
+                <input id="userinput" type="text" class="form-control" placeholder="Enter item"
+                    aria-label="Recipient's username" aria-describedby="button-addon2" data-bs-toggle="popover"
+                    title="Tip" data-bs-content="Click on items to cross them off! Double click to edit!"
+                    data-bs-placement="left" data-bs-container="body">
+                <button id="add" class="btn btn-outline-secondary bg-light" type="button" onclick="">Add</button>
+            </div>
+        </div>
+
+        <div id="tasks">
+            <h1 class="text-center pt-3">TO-DO List</h1>
+            <p id="panding-tasks" class="text-center">
+                You have <span class="count-value">0</span> Taske's to complete.
+            </p>
+        </div>
+        <p id="error" class="error text-center">Input can't be empty !</p>
+    </div>
+    <!-- scripts -->
+
+    <!-- script bootstrap -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous">
+        </script>
+
+    <!-- Persnol script -->
+    <script>
+        const add = document.querySelector("#add");
+        const newInput = document.querySelector("#userinput");
+        const tasksContainer = document.querySelector("#tasks");
+        const error = document.querySelector("#error");
+        const countValue = document.querySelector(".count-value");
+
+        let taskCount = 0;
+
+        const displayCount = (taskCount) => {
+            countValue.textContent = taskCount;
+        };
+
+        const addTask = () => {
+            const taskName = newInput.value.trim();
+            error.style.display = "none";
+
+            if (!taskName) {
+                setTimeout(() => {
+                    error.style.display = "block";
+                }, 200);
+                return;
+            }
+
+            const taskHTML = `<div class="task">
+                <input type="checkbox" class="taskCheck">
+                <span class="taskname">${taskName}</span>
+                <button class="edit">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button class="delete">
+                    <i class="fa-solid fa-trash"></i>  
+                </button>
+            </div>`;
+
+            tasksContainer.insertAdjacentHTML("beforeend",taskHTML);
+
+            newInput.value = ""; // Clear the input field after adding task
+
+            const deleteBtn = document.querySelectorAll(".delete");
+            deleteBtn.forEach(button =>{
+                button.onclick = () =>{
+                    button.parentNode.remove();
+                    taskCount -= 1;
+                    displayCount(taskCount);
+                };
+            });
+
+            const editBtns = document.querySelectorAll(".edit");
+            editBtns.forEach((editButton) =>{
+                editButton.onclick = (e) =>{
+                    let targetElement = e.target;
+                    if(!(e.target.className == "edit")){
+                        targetElement = e.target.parentElement;
+                    }
+                    newInput.value = targetElement.parentNode?.innerText;
+                    targetElement.parentNode.remove();
+                    taskCount -= 1;
+                    displayCount(taskCount);
+                };
+            });
+
+            const taskCheck = document.querySelectorAll(".taskCheck");
+            taskCheck.forEach((checkBox)=>{
+                checkBox.onchange =()=>{
+                    checkBox.nextElementSibling.classList.toggle("complited");
+                    if(checkBox.checked){
+                        taskCount -= 1;
+                    }else{
+                        taskCount += 1;
+                    }
+                    displayCount(taskCount);
+                };
+            });
+            taskCount += 1;
+            displayCount(taskCount);
+            newInput.value = "";
+        };
+
+        add.addEventListener("click", addTask);
+        window.onload =()=>{
+            taskCount = 0;
+            displayCount(taskCount);
+            newInput.value = "";
+        };
+    </script>
+</body>
+
+</html>
